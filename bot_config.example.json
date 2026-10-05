@@ -1,0 +1,33 @@
+{
+  "botName": "Sofía",
+  "businessName": "Mi Empresa C.A.",
+  "country": "Venezuela",
+  "currency": "USD",
+  "secondaryCurrency": "VES",
+  "timezone": "America/Caracas",
+  "advisorPhone": "584121234567",
+  "supportEmail": "soporte@miempresa.com",
+  "schedule": {
+    "weekdays": "08:00 AM - 05:00 PM",
+    "saturdays": "08:00 AM - 02:00 PM",
+    "sundays": "Cerrado"
+  },
+  "address": "Av. Principal, Edificio Central, Local 1",
+  "mapsUrl": "https://maps.google.com",
+  "paymentMethods": {
+    "pagoMovil": {
+      "banco": "Banesco (0134)",
+      "telefono": "0412-1234567",
+      "ci": "12345678",
+      "titular": "Mi Empresa C.A."
+    },
+    "zelle": "pagos@miempresa.com",
+    "cash": "Aceptado en tienda física"
+  },
+  "features": {
+    "humanTakeoverDetection": true,
+    "receiptVerification": true,
+    "deliveryCalculation": true,
+    "satisfactionSurvey": true
+  }
+}

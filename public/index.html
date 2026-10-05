@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard IA - WhatsApp Bot Manager</title>
+    <link rel="stylesheet" href="styles.css?v=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- PANTALLA DE INICIO DE SESIÓN -->
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-card glass">
+            <div class="login-header">
+                <div class="login-icon"><i class="fa-brands fa-whatsapp"></i></div>
+                <h2 id="login-title">Panel de Control WhatsApp IA</h2>
+                <p>Ingresa tus credenciales de acceso administrativo</p>
+            </div>
+            <form id="login-form">
+                <div id="login-error" class="login-error hidden"></div>
+                <div class="form-group">
+                    <label for="username"><i class="fa-solid fa-user"></i> Usuario</label>
+                    <input type="text" id="username" required autocomplete="username" placeholder="admin">
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class="fa-solid fa-lock"></i> Contraseña</label>
+                    <input type="password" id="password" required autocomplete="current-password" placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <div class="app-layout">
+        <!-- BARRA LATERAL -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon"><i class="fa-solid fa-robot"></i></div>
+                <div class="brand-info">
+                    <h3 id="sidebar-business-name">WhatsApp AI Bot</h3>
+                    <span class="brand-badge" id="bot-status-badge"><span class="dot"></span> Conectando...</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-tab="tab-status">
+                    <i class="fa-solid fa-qrcode"></i> Vinculación & Estado
+                </button>
+                <button class="nav-btn" data-tab="tab-orders">
+                    <i class="fa-solid fa-receipt"></i> Pedidos y Cotizaciones
+                </button>
+                <button class="nav-btn" data-tab="tab-chats">
+                    <i class="fa-solid fa-comments"></i> Conversaciones en Vivo
+                </button>
+                <button class="nav-btn" data-tab="tab-knowledge">
+                    <i class="fa-solid fa-brain"></i> Base de Conocimiento
+                </button>
+                <button class="nav-btn" data-tab="tab-config">
+                    <i class="fa-solid fa-sliders"></i> Ajustes del Negocio
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button id="btn-logout-panel" class="btn btn-outline-danger btn-block">
+                    <i class="fa-solid fa-power-off"></i> Cerrar Sesión
+                </button>
+            </div>
+        </aside>
+
+        <!-- ÁREA DE CONTENIDO -->
+        <main class="main-content">
+            <!-- CABECERA SUPERIOR -->
+            <header class="topbar glass">
+                <div class="topbar-title">
+                    <h1 id="page-title">Estado de WhatsApp</h1>
+                    <p id="page-subtitle">Monitoreo en tiempo real de la conexión del asistente virtual</p>
+                </div>
+                <div class="topbar-actions">
+                    <div class="status-indicator-pill" id="global-status-pill">
+                        <span class="status-dot-indicator"></span>
+                        <span id="global-status-text">Iniciando...</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- PESTAÑA 1: VINCULACIÓN & ESTADO -->
+            <section id="tab-status" class="tab-content active">
+                <div class="grid-2">
+                    <!-- TARJETA DEL CÓDIGO QR -->
+                    <div class="card glass text-center" id="card-qr">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-qrcode"></i> Vinculación con WhatsApp</h3>
+                            <p>Escanea el código QR desde la app de WhatsApp en tu teléfono</p>
+                        </div>
+                        <div class="qr-container" id="qr-container">
+                            <div id="qr-loading" class="qr-placeholder">
+                                <i class="fa-solid fa-spinner fa-spin fa-2x"></i>
+                                <p>Generando código QR seguro...</p>
+                            </div>
+                            <img id="qr-image" class="qr-img hidden" alt="Código QR de WhatsApp" src="" />
+                            <div id="qr-connected" class="qr-placeholder hidden">
+                                <i class="fa-solid fa-circle-check text-success fa-3x"></i>
+                                <h3>¡Sofía está Conectada y en Línea!</h3>
+                                <p>Atendiendo cotizaciones de tus clientes automáticamente 24/7.</p>
+                                <p class="connected-phone" id="connected-phone-display">+--</p>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button id="btn-regenerate-qr" class="btn btn-warning">
+                                <i class="fa-solid fa-arrows-rotate"></i> Desconectar y Generar Nuevo QR
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- TARJETA DE SALUD DEL SISTEMA -->
+                    <div class="card glass">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-gauge-high"></i> Salud Operativa</h3>
+                            <p>Parámetros en tiempo real del motor de IA y servidor</p>
+                        </div>
+                        <div class="metrics-list">
+                            <div class="metric-item">
+                                <span class="metric-label">Motor de Inteligencia Artificial:</span>
+                                <span class="metric-value badge badge-purple" id="metric-model">Gemini 2.5 Flash</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Línea de WhatsApp Conectada:</span>
+                                <span class="metric-value font-mono" id="metric-phone">Esperando escaneo...</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Modo de Atención:</span>
+                                <span class="metric-value badge badge-success" id="metric-mode">Automático 24/7</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Horario de Tienda:</span>
+                                <span class="metric-value" id="metric-schedule">Cargando...</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Moneda Principal:</span>
+                                <span class="metric-value" id="metric-currency">USD</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 2: PEDIDOS Y COTIZACIONES -->
+            <section id="tab-orders" class="tab-content hidden">
+                <div class="card glass">
+                    <div class="card-header flex-between">
+                        <div>
+                            <h3><i class="fa-solid fa-receipt"></i> Cotizaciones & Pre-Pedidos Recientes</h3>
+                            <p>Registros tomados automáticamente por la IA en las conversaciones</p>
+                        </div>
+                        <button id="btn-refresh-orders" class="btn btn-secondary btn-sm">
+                            <i class="fa-solid fa-rotate"></i> Actualizar
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Cliente</th>
+                                    <th>Teléfono</th>
+                                    <th>Detalle del Pedido</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders-tbody">
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">No hay pedidos registrados aún.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 3: CONVERSACIONES EN VIVO -->
+            <section id="tab-chats" class="tab-content hidden">
+                <div class="card glass">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-comments"></i> Conversaciones de WhatsApp en Vivo</h3>
+                        <p>Monitorea y atiende directamente a tus clientes si deseas pausar la IA</p>
+                    </div>
+                    <div class="chat-container">
+                        <div class="chat-list" id="chat-list">
+                            <p class="text-muted p-3">Cargando chats recientes...</p>
+                        </div>
+                        <div class="chat-view" id="chat-view">
+                            <div class="chat-placeholder">
+                                <i class="fa-regular fa-comment-dots fa-3x"></i>
+                                <p>Selecciona una conversación a la izquierda para inspeccionarla.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 4: BASE DE CONOCIMIENTO -->
+            <section id="tab-knowledge" class="tab-content hidden">
+                <div class="card glass">
+                    <div class="card-header flex-between">
+                        <div>
+                            <h3><i class="fa-solid fa-brain"></i> Manual de Conocimiento (Knowledge Base)</h3>
+                            <p>Define las reglas, productos, precios, políticas y respuestas oficiales de la IA</p>
+                        </div>
+                        <button id="btn-save-knowledge" class="btn btn-primary">
+                            <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="knowledge-editor" rows="18" class="code-editor" placeholder="Cargando base de conocimiento..."></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 5: AJUSTES DEL NEGOCIO -->
+            <section id="tab-config" class="tab-content hidden">
+                <div class="card glass">
+                    <div class="card-header flex-between">
+                        <div>
+                            <h3><i class="fa-solid fa-sliders"></i> Configuración General del Negocio</h3>
+                            <p>Ajusta el nombre, horarios, teléfonos de alerta y datos bancarios</p>
+                        </div>
+                        <button id="btn-save-config" class="btn btn-primary">
+                            <i class="fa-solid fa-floppy-disk"></i> Guardar Ajustes
+                        </button>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Nombre del Negocio / Empresa:</label>
+                            <input type="text" id="cfg-business-name" placeholder="Mi Empresa C.A.">
+                        </div>
+                        <div class="form-group">
+                            <label>Teléfono del Asesor para Alertas:</label>
+                            <input type="text" id="cfg-advisor-phone" placeholder="584121234567">
+                        </div>
+                        <div class="form-group">
+                            <label>Horario Lunes a Viernes:</label>
+                            <input type="text" id="cfg-schedule-weekdays" placeholder="08:00 AM - 05:00 PM">
+                        </div>
+                        <div class="form-group">
+                            <label>Horario Sábados:</label>
+                            <input type="text" id="cfg-schedule-saturdays" placeholder="08:00 AM - 02:00 PM">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Dirección Física Completa:</label>
+                            <input type="text" id="cfg-address" placeholder="Av. Principal, Edificio Central, Local 1">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Enlace de Google Maps:</label>
+                            <input type="text" id="cfg-maps-url" placeholder="https://maps.google.com/...">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js?v=1.0"></script>
+</body>
+</html>
